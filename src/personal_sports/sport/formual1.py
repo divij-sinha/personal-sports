@@ -59,8 +59,11 @@ def parse_f1_calendar_row(title: str, row: str, source_url: str):
     return event_dict
 
 
-def main():
-    logger.info("Starting Formula 1 calendar fetch...")
+def get_f1_calendar():
+    """Fetches and saves the Formula 1 calendar for the 2026 season.
+    Returns:
+        list: A list of dictionaries containing the calendar events.
+    """
     main_url = "https://www.formula1.com/en/racing/2026"
     xpath_filter = '//div[@class="grid justify-items-stretch items-center gap-px-12 @[738px]/cards:gap-px-16 lg:gap-px-24 grid-cols-1 @[640px]/cards:grid-cols-2 @[1320px]/cards:grid-cols-3"]//a'
     links = utils.extract_from_url(main_url, xpath_filter)[0]
@@ -79,11 +82,45 @@ def main():
             event_dict = parse_f1_calendar_row(title, info, cur_url)
             all_events.append(event_dict)
     logger.info(f"Parsed {len(all_events)} events for {title}.")
-
     json.dump(all_events, open(data_dir / "f1_2026_calendar.json", "w"), indent=4, default=str)
     pickle.dump(all_events, open(data_dir / "f1_2026_calendar.pkl", "wb"))
 
     logger.info("Finished fetching and parsing Formula 1 calendar data.")
+
+    return all_events
+
+
+def get_f1_standings_driver():
+    """Fetches and saves the Formula 1 driver standings for the 2026 season.
+    Returns:
+        list: A list of dictionaries containing the driver standings.
+    """
+    url = "https://f1api.dev/api/current/drivers-championship"
+    result = utils.fetch_url(url)
+    result = json.loads(result)
+    json.dump(result, open(data_dir / "f1_2026_driver_standings.json", "w"), indent=4)
+    json.dump(result, open(data_dir / "f1_2026_driver_standings.pkl", "wb"))
+
+    return result
+
+
+def get_f1_standings_constructor():
+    """Fetches and saves the Formula 1 constructor standings for the 2026 season.
+    Returns:
+        list: A list of dictionaries containing the driver standings.
+    """
+    url = "https://f1api.dev/api/current/constructors-championship"
+    result = utils.fetch_url(url)
+    result = json.loads(result)
+    json.dump(result, open(data_dir / "f1_2026_constructor_standings.json", "w"), indent=4)
+    json.dump(result, open(data_dir / "f1_2026_constructor_standings.pkl", "wb"))
+
+    return result
+
+
+def main():
+    calendar = get_f1_calendar()
+    logger.debug(f"Calendar data: {calendar}")
 
 
 if __name__ == "__main__":
