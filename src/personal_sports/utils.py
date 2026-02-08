@@ -1,6 +1,7 @@
 import httpx
 from lxml import html
 
+
 def fetch_url(url):
     """
     Fetches the content of the given URL.
@@ -22,7 +23,8 @@ def fetch_url(url):
         print(f"An unexpected error occurred: {e}")
         return None
 
-def extract_from_url(url, xpath_filter : str | list = "//a/@href"):
+
+def extract_from_url(url, xpath_filter: str | list = "//a/@href"):
     """
     Fetches all `a href` links from the given URL.
 
@@ -45,7 +47,6 @@ def extract_from_url(url, xpath_filter : str | list = "//a/@href"):
     return l_links
 
 
-
 month_to_num = {
     "Jan": 1,
     "Feb": 2,
@@ -58,5 +59,5 @@ month_to_num = {
     "Sep": 9,
     "Oct": 10,
     "Nov": 11,
-    "Dec": 12
+    "Dec": 12,
 }
