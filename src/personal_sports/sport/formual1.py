@@ -99,7 +99,7 @@ def get_f1_standings_driver():
     result = utils.fetch_url(url)
     result = json.loads(result)
     json.dump(result, open(data_dir / "f1_2026_driver_standings.json", "w"), indent=4)
-    json.dump(result, open(data_dir / "f1_2026_driver_standings.pkl", "wb"))
+    json.dump(result, open(data_dir / "f1_2026_driver_standings.pkl", "w"))
 
     return result
 
@@ -113,14 +113,18 @@ def get_f1_standings_constructor():
     result = utils.fetch_url(url)
     result = json.loads(result)
     json.dump(result, open(data_dir / "f1_2026_constructor_standings.json", "w"), indent=4)
-    json.dump(result, open(data_dir / "f1_2026_constructor_standings.pkl", "wb"))
+    json.dump(result, open(data_dir / "f1_2026_constructor_standings.pkl", "w"))
 
     return result
 
 
 def main():
-    calendar = get_f1_calendar()
-    logger.debug(f"Calendar data: {calendar}")
+    # calendar = get_f1_calendar()
+    # logger.debug(f"Calendar data Done!")
+    driver_standings = get_f1_standings_driver()
+    logger.debug("Driver standings data Done!")
+    constructor_standings = get_f1_standings_constructor()
+    logger.debug("Constructor standings data Done!")
 
 
 if __name__ == "__main__":
