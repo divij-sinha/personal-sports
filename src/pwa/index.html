@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>League Data</title>
+  </head>
+  <body>
+    <main id="app">Loading…</main>
+    <script>
+      function getLeagueName() {
+        const params = new URLSearchParams(window.location.search);
+        const raw = params.get("name");
+        if (!raw) {
+          return null;
+        }
+        return raw.replaceAll("'", "").trim();
+      }
+
+      function createTable(data) {
+        if (!Array.isArray(data) || data.length === 0) {
+          return document.createTextNode("No rows found.");
+        }
+
+        const table = document.createElement("table");
+        const header = document.createElement("tr");
+        const columns = Object.keys(data[0]);
+
+        columns.forEach((col) => {
+          const th = document.createElement("th");
+          th.textContent = col;
+          header.appendChild(th);
+        });
+        table.appendChild(header);
+
+        data.forEach((row) => {
+          const tr = document.createElement("tr");
+          columns.forEach((col) => {
+            const td = document.createElement("td");
+            td.textContent = row[col];
+            tr.appendChild(td);
+          });
+          table.appendChild(tr);
+        });
+
+        return table;
+      }
+
+      async function loadData() {
+        const mount = document.getElementById("app");
+        const leagueName = getLeagueName();
+
+        if (!leagueName) {
+          mount.textContent = "Missing 'name' query parameter.";
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `http://localhost:8000/src/data/${leagueName}.json`,
+            {
+              cache: "no-cache",
+            },
+          );
+          if (!response.ok) {
+            throw new Error("Not found");
+          }
+          const data = await response.json();
+          mount.replaceChildren(createTable(data));
+        } catch (error) {
+          mount.textContent =
+            "Unable to load http://localhost:8000/src/data/" +
+            `${leagueName}.json.`;
+        }
+      }
+
+      loadData();
+    </script>
+  </body>
+</html>
